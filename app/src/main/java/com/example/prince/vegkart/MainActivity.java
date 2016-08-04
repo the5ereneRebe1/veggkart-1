@@ -66,6 +66,13 @@ public class MainActivity extends AppCompatActivity
       navigationView.setNavigationItemSelectedListener(this);
       tabLayout = (TabLayout) findViewById(R.id.tabs);
 
+      /*
+       Adding the Array Adapter for the Product class with dummy data
+       Here items is the Array of elements that are to be added to the Recycler View.
+       We populate the Array Adapter with dummy data in case of network failure the
+       sendRequest() method does not work which populates the <Product> array adapter
+       wjth actual data from the server.
+      */
       for (int j = 0; j < 7; j++) {
         items.add(new ArrayList<Product>());
         for (int i = 1; i < 25; i++) {
@@ -74,6 +81,10 @@ public class MainActivity extends AppCompatActivity
       }
 
       productListView = (RecyclerView) findViewById(R.id.mainListView);
+        /*
+        * Added : The recycler view will have fixed size for every item
+        * */
+        productListView.setHasFixedSize(true);
       productListView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
     } catch (Exception e) {
       e.printStackTrace();
@@ -82,7 +93,8 @@ public class MainActivity extends AppCompatActivity
   }
 
   /**
-   * This Method sendRequest(), makes a request queue using volley.
+   * This Method sendRequest(), makes a request queue using volley. First we are adding the data fetched to the
+   * ArrayAdapter object item and then passing the items ArrayAdapter to the RecyclerView Adapter.
    */
   private void sendRequest() {
     try {
@@ -107,7 +119,10 @@ public class MainActivity extends AppCompatActivity
 
         }
       });
-
+        /*
+        * Passing the JsonObjetcRequest object that contains the data fetched from the server into the VolleySingleton class
+        * as an instance.
+        **/
       VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
     } catch (Exception e) {
       e.printStackTrace();
